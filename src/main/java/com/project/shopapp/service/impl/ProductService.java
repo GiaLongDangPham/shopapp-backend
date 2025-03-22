@@ -1,5 +1,7 @@
 package com.project.shopapp.service.impl;
 
+import static com.project.shopapp.model.ProductImage.MAXIMUM_IMAGES_PER_PRODUCT;
+
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -16,11 +18,10 @@ import com.project.shopapp.model.ProductImage;
 import com.project.shopapp.repository.CategoryRepository;
 import com.project.shopapp.repository.ProductImageRepository;
 import com.project.shopapp.repository.ProductRepository;
+import com.project.shopapp.response.ProductResponse;
 import com.project.shopapp.service.IProductService;
 
 import lombok.RequiredArgsConstructor;
-
-import static com.project.shopapp.model.ProductImage.MAXIMUM_IMAGES_PER_PRODUCT;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +41,7 @@ public class ProductService implements IProductService {
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
                 .thumbnail(productDTO.getThumbnail())
+                .description(productDTO.getDescription())
                 .category(existingCategory)
                 .build();
         return productRepository.save(newProduct);
@@ -53,9 +55,10 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<Product> getAllProducts(PageRequest pageRequest) {
+    public Page<ProductResponse> getAllProducts(PageRequest pageRequest) {
         // Lấy danh sách sản phẩm theo trang(page) và giới hạn(limit)
-        return productRepository.findAll(pageRequest);
+
+        return productRepository.findAll(pageRequest).map(ProductResponse::fromProduct);
     }
 
     @Override
@@ -91,7 +94,8 @@ public class ProductService implements IProductService {
 
     @Override
     public ProductImage createProductImage(Long productId, ProductImageDTO productImageDTO) throws Exception {
-        Product existingProduct = productRepository.findById(productId)
+        Product existingProduct = productRepository
+                .findById(productId)
                 .orElseThrow(() -> new DataNotFoundException("Cannot find product with id: " + productId));
         ProductImage newProductImage = ProductImage.builder()
                 .product(existingProduct)

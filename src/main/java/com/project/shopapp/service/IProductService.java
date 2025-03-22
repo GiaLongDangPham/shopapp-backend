@@ -6,13 +6,14 @@ import org.springframework.data.domain.PageRequest;
 import com.project.shopapp.dto.ProductDTO;
 import com.project.shopapp.dto.ProductImageDTO;
 import com.project.shopapp.model.*;
+import com.project.shopapp.response.ProductResponse;
 
 public interface IProductService {
     Product createProduct(ProductDTO productDTO) throws Exception;
 
     Product getProductById(long id) throws Exception;
 
-    Page<Product> getAllProducts(PageRequest pageRequest);
+    Page<ProductResponse> getAllProducts(PageRequest pageRequest);
 
     Product updateProduct(long id, ProductDTO productDTO) throws Exception;
 
