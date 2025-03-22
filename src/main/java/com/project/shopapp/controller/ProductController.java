@@ -26,6 +26,8 @@ import com.project.shopapp.service.IProductService;
 
 import lombok.RequiredArgsConstructor;
 
+import static com.project.shopapp.model.ProductImage.MAXIMUM_IMAGES_PER_PRODUCT;
+
 @RestController
 @RequestMapping("${api.prefix}/products")
 @RequiredArgsConstructor
@@ -56,6 +58,10 @@ public class ProductController {
         try {
             Product existingProduct = productService.getProductById(productId);
             files = files == null ? new ArrayList<MultipartFile>() : files;
+            if(files.size() > MAXIMUM_IMAGES_PER_PRODUCT){
+                return ResponseEntity.badRequest()
+                        .body("you can not upload more than " + MAXIMUM_IMAGES_PER_PRODUCT + " images");
+            }
             List<ProductImage> productImages = new ArrayList<>();
             for (MultipartFile file : files) {
                 if (file.getSize() == 0) {
@@ -72,7 +78,7 @@ public class ProductController {
                             .body("File must be an image");
                 }
                 // Lưu file và cập nhật thumbnail trong DTO
-                String filename = storeFile(file); // Thay thế hàm này với code của bạn để lưu file
+                String filename = storeFile(file);
                 // lưu vào đối tượng product trong DB
                 ProductImage productImage = productService.createProductImage(
                         existingProduct.getId(),
@@ -86,6 +92,9 @@ public class ProductController {
     }
 
     private String storeFile(MultipartFile file) throws IOException {
+        if(!isImageFile(file) || file.getOriginalFilename() == null){
+            throw new IOException("Invalid file format");
+        }
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         // Thêm UUID vào trước tên file để đảm bảo tên file là duy nhất
         String uniqueFilename = UUID.randomUUID().toString() + "_" + filename;
@@ -100,6 +109,11 @@ public class ProductController {
         // Sao chép file vào thư mục đích
         Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
         return uniqueFilename;
+    }
+
+    private boolean isImageFile(MultipartFile file) {
+        String contentType = file.getContentType();
+        return contentType != null && contentType.startsWith("image/");
     }
 
     @GetMapping("")

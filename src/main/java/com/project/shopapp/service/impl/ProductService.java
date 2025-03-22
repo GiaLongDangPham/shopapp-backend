@@ -20,6 +20,8 @@ import com.project.shopapp.service.IProductService;
 
 import lombok.RequiredArgsConstructor;
 
+import static com.project.shopapp.model.ProductImage.MAXIMUM_IMAGES_PER_PRODUCT;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
@@ -89,8 +91,7 @@ public class ProductService implements IProductService {
 
     @Override
     public ProductImage createProductImage(Long productId, ProductImageDTO productImageDTO) throws Exception {
-        Product existingProduct = productRepository
-                .findById(productId)
+        Product existingProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new DataNotFoundException("Cannot find product with id: " + productId));
         ProductImage newProductImage = ProductImage.builder()
                 .product(existingProduct)
@@ -98,8 +99,8 @@ public class ProductService implements IProductService {
                 .build();
         // Ko cho insert quá 5 ảnh cho 1 sản phẩm
         int size = productImageRepository.findByProductId(productId).size();
-        if (size >= 5) {
-            throw new InvalidParamException("Number of images must be <= 5");
+        if (size >= MAXIMUM_IMAGES_PER_PRODUCT) {
+            throw new InvalidParamException("Number of images must be <= " + MAXIMUM_IMAGES_PER_PRODUCT);
         }
         return productImageRepository.save(newProductImage);
     }
