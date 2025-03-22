@@ -1,10 +1,11 @@
 package com.project.shopapp.model;
 
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import jakarta.persistence.*;
+
+import lombok.*;
 
 @Entity
 @Table(name = "orders")
@@ -28,7 +29,7 @@ public class Order {
     @Column(name = "email", length = 100)
     private String email;
 
-    @Column(name = "phone_number",nullable = false, length = 100)
+    @Column(name = "phone_number", nullable = false, length = 100)
     private String phoneNumber;
 
     @Column(name = "address", length = 100)
@@ -37,7 +38,7 @@ public class Order {
     @Column(name = "note", length = 100)
     private String note;
 
-    @Column(name="order_date")
+    @Column(name = "order_date")
     private LocalDateTime orderDate;
 
     @Column(name = "status")
@@ -62,6 +63,5 @@ public class Order {
     private String paymentMethod;
 
     @Column(name = "active")
-    private Boolean active;//thuộc về admin
-
+    private Boolean active; // thuộc về admin
 }

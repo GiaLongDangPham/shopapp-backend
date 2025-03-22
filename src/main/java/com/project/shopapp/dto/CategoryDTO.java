@@ -1,9 +1,10 @@
 package com.project.shopapp.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+
 import lombok.*;
 
-@Data//toString
+@Data // toString
 @Getter
 @Setter
 @AllArgsConstructor

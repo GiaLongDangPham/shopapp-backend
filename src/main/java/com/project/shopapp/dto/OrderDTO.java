@@ -1,9 +1,11 @@
 package com.project.shopapp.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.*;
 
 @Data
@@ -44,6 +46,4 @@ public class OrderDTO {
 
     @JsonProperty("payment_method")
     private String paymentMethod;
-
-
 }

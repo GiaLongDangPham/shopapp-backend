@@ -1,11 +1,13 @@
 package com.project.shopapp.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.*;
 
-@Data//toString
+@Data // toString
 @Getter
 @Setter
 @AllArgsConstructor

@@ -1,6 +1,7 @@
 package com.project.shopapp.model;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 
 @Entity
@@ -34,5 +35,4 @@ public class OrderDetail {
 
     @Column(name = "color")
     private String color;
-
 }
