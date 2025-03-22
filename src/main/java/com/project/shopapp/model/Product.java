@@ -1,6 +1,7 @@
 package com.project.shopapp.model;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 
 @Entity
@@ -10,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Product extends BaseEntity{
+public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

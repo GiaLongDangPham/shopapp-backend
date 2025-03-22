@@ -1,9 +1,10 @@
 package com.project.shopapp.model;
 
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
+
+import lombok.*;
 
 @Entity
 @Table(name = "tokens")
@@ -32,5 +33,4 @@ public class Token {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
 }

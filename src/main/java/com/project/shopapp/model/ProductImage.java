@@ -1,6 +1,7 @@
 package com.project.shopapp.model;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 
 @Entity
@@ -21,5 +22,4 @@ public class ProductImage {
 
     @Column(name = "image_url", length = 300)
     private String imageUrl;
-
 }

@@ -1,10 +1,12 @@
 package com.project.shopapp.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
 import jakarta.validation.constraints.*;
 
-@Data//toString
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.*;
+
+@Data // toString
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,6 +26,4 @@ public class ProductDTO {
 
     @JsonProperty("category_id")
     private Long categoryId;
-
-
 }

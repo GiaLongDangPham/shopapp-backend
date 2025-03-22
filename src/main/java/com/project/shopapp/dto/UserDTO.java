@@ -1,11 +1,13 @@
 package com.project.shopapp.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.*;
 
 @Data
 @Builder
