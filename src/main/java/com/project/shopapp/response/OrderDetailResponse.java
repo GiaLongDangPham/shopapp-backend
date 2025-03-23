@@ -1,7 +1,7 @@
 package com.project.shopapp.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.project.shopapp.model.OrderDetail;
+
 import lombok.*;
 
 @Getter
@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDetailResponse extends BaseReponse{
+public class OrderDetailResponse extends BaseReponse {
     private Long id;
 
     @JsonProperty("order_id")
@@ -29,16 +29,16 @@ public class OrderDetailResponse extends BaseReponse{
 
     private String color;
 
-//    public static OrderDetailResponse fromOrderDetail(OrderDetail orderDetail) {
-//        return OrderDetailResponse
-//                .builder()
-//                .id(orderDetail.getId())
-//                .orderId(orderDetail.getOrder().getId())
-//                .productId(orderDetail.getProduct().getId())
-//                .price(orderDetail.getPrice())
-//                .numberOfProducts(orderDetail.getNumberOfProducts())
-//                .totalMoney(orderDetail.getTotalMoney())
-//                .color(orderDetail.getColor())
-//                .build();
-//    }
+    //    public static OrderDetailResponse fromOrderDetail(OrderDetail orderDetail) {
+    //        return OrderDetailResponse
+    //                .builder()
+    //                .id(orderDetail.getId())
+    //                .orderId(orderDetail.getOrder().getId())
+    //                .productId(orderDetail.getProduct().getId())
+    //                .price(orderDetail.getPrice())
+    //                .numberOfProducts(orderDetail.getNumberOfProducts())
+    //                .totalMoney(orderDetail.getTotalMoney())
+    //                .color(orderDetail.getColor())
+    //                .build();
+    //    }
 }

@@ -1,5 +1,7 @@
 package com.project.shopapp.dto;
 
+import java.time.LocalDate;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -7,9 +9,6 @@ import jakarta.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.*;
-
-import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @Builder

@@ -1,5 +1,9 @@
 package com.project.shopapp.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.project.shopapp.dto.OrderDetailDTO;
 import com.project.shopapp.exception.DataNotFoundException;
 import com.project.shopapp.model.Order;
@@ -9,10 +13,8 @@ import com.project.shopapp.repository.OrderDetailRepository;
 import com.project.shopapp.repository.OrderRepository;
 import com.project.shopapp.repository.ProductRepository;
 import com.project.shopapp.service.IOrderDetailService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -23,13 +25,15 @@ public class OrderDetailService implements IOrderDetailService {
 
     @Override
     public OrderDetail createOrderDetail(OrderDetailDTO orderDetailDTO) throws Exception {
-        Order order = orderRepository.findById(orderDetailDTO.getOrderId())
-                .orElseThrow(() -> new DataNotFoundException(
-                        "Cannot find Order with id : "+orderDetailDTO.getOrderId()));
+        Order order = orderRepository
+                .findById(orderDetailDTO.getOrderId())
+                .orElseThrow(
+                        () -> new DataNotFoundException("Cannot find Order with id : " + orderDetailDTO.getOrderId()));
         // Tìm Product theo id
-        Product product = productRepository.findById(orderDetailDTO.getProductId())
-                .orElseThrow(() -> new DataNotFoundException(
-                        "Cannot find product with id: " + orderDetailDTO.getProductId()));
+        Product product = productRepository
+                .findById(orderDetailDTO.getProductId())
+                .orElseThrow(() ->
+                        new DataNotFoundException("Cannot find product with id: " + orderDetailDTO.getProductId()));
         OrderDetail orderDetail = OrderDetail.builder()
                 .order(order)
                 .product(product)
@@ -40,24 +44,27 @@ public class OrderDetailService implements IOrderDetailService {
                 .build();
 
         return orderDetailRepository.save(orderDetail);
-
     }
 
     @Override
     public OrderDetail getOrderDetail(Long id) throws DataNotFoundException {
-        return orderDetailRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException("Cannot find OrderDetail with id: "+id));
+        return orderDetailRepository
+                .findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Cannot find OrderDetail with id: " + id));
     }
 
     @Override
     public OrderDetail updateOrderDetail(Long id, OrderDetailDTO orderDetailDTO) throws DataNotFoundException {
-        OrderDetail existingOrderDetail = orderDetailRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException("Cannot find order detail with id: "+id));
-        Order existingOrder = orderRepository.findById(orderDetailDTO.getOrderId())
-                .orElseThrow(() -> new DataNotFoundException("Cannot find order with id: "+id));
-        Product existingProduct = productRepository.findById(orderDetailDTO.getProductId())
-                .orElseThrow(() -> new DataNotFoundException(
-                        "Cannot find product with id: " + orderDetailDTO.getProductId()));
+        OrderDetail existingOrderDetail = orderDetailRepository
+                .findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Cannot find order detail with id: " + id));
+        Order existingOrder = orderRepository
+                .findById(orderDetailDTO.getOrderId())
+                .orElseThrow(() -> new DataNotFoundException("Cannot find order with id: " + id));
+        Product existingProduct = productRepository
+                .findById(orderDetailDTO.getProductId())
+                .orElseThrow(() ->
+                        new DataNotFoundException("Cannot find product with id: " + orderDetailDTO.getProductId()));
 
         existingOrderDetail.setPrice(orderDetailDTO.getPrice());
         existingOrderDetail.setNumberOfProducts(orderDetailDTO.getNumberOfProducts());
