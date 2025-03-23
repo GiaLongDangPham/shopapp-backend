@@ -1,8 +1,8 @@
 package com.project.shopapp.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import com.project.shopapp.model.Product;
+
 import lombok.*;
 
 @Getter

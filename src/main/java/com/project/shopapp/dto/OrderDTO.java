@@ -1,5 +1,7 @@
 package com.project.shopapp.dto;
 
+import java.time.LocalDate;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -40,6 +42,9 @@ public class OrderDTO {
 
     @JsonProperty("shipping_method")
     private String shippingMethod;
+
+    @JsonProperty("shipping_date")
+    private LocalDate shippingDate;
 
     @JsonProperty("shipping_address")
     private String shippingAddress;
