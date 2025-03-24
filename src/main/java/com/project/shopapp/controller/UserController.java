@@ -2,7 +2,6 @@ package com.project.shopapp.controller;
 
 import java.util.List;
 
-import com.project.shopapp.model.User;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.shopapp.dto.*;
+import com.project.shopapp.model.User;
 import com.project.shopapp.service.IUserService;
 
 import lombok.RequiredArgsConstructor;
@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDTO userLoginDTO){
+    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
         // Kiểm tra thông tin đăng nhập và sinh token
         try {
             String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());

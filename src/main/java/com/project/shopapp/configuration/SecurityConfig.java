@@ -1,8 +1,5 @@
 package com.project.shopapp.configuration;
 
-import com.project.shopapp.model.User;
-import com.project.shopapp.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +11,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.project.shopapp.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -21,9 +22,10 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return phoneNumber -> userRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("Cannot find user with phone number = "+phoneNumber));
+        return phoneNumber -> userRepository
+                .findByPhoneNumber(phoneNumber)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("Cannot find user with phone number = " + phoneNumber));
     }
 
     @Bean

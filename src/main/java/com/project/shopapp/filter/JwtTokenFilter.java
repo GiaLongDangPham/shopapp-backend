@@ -1,4 +1,3 @@
 package com.project.shopapp.filter;
 
-public class JwtTokenFilter {
-}
+public class JwtTokenFilter {}
