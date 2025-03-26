@@ -2,10 +2,6 @@ package com.project.shopapp.controller;
 
 import java.util.List;
 
-import com.project.shopapp.response.LoginResponse;
-import com.project.shopapp.component.LocalizationUtils;
-import com.project.shopapp.response.RegisterResponse;
-import com.project.shopapp.util.MessageKeys;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -16,9 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.shopapp.component.LocalizationUtils;
 import com.project.shopapp.dto.*;
 import com.project.shopapp.model.User;
+import com.project.shopapp.response.LoginResponse;
+import com.project.shopapp.response.RegisterResponse;
 import com.project.shopapp.service.IUserService;
+import com.project.shopapp.util.MessageKeys;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,8 +34,7 @@ public class UserController {
         RegisterResponse registerResponse = new RegisterResponse();
 
         if (result.hasErrors()) {
-            List<String> errorMessages = result.getFieldErrors()
-                    .stream()
+            List<String> errorMessages = result.getFieldErrors().stream()
                     .map(FieldError::getDefaultMessage)
                     .toList();
 
@@ -65,15 +64,15 @@ public class UserController {
         try {
             String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
 
-            return ResponseEntity.ok(
-                LoginResponse.builder()
+            return ResponseEntity.ok(LoginResponse.builder()
                     .token(token)
                     .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGIN_SUCCESSFULLY))
                     .build());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(LoginResponse.builder()
+            return ResponseEntity.badRequest()
+                    .body(LoginResponse.builder()
                             .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGIN_FAILED, e.getMessage()))
-                    .build());
+                            .build());
         }
         // Trả về token trong response
 

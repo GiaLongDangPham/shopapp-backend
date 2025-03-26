@@ -2,10 +2,6 @@ package com.project.shopapp.controller;
 
 import java.util.List;
 
-import com.project.shopapp.response.CategoryResponse;
-import com.project.shopapp.response.UpdateCategoryResponse;
-import com.project.shopapp.component.LocalizationUtils;
-import com.project.shopapp.util.MessageKeys;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -13,9 +9,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import com.project.shopapp.component.LocalizationUtils;
 import com.project.shopapp.dto.*;
 import com.project.shopapp.model.Category;
+import com.project.shopapp.response.CategoryResponse;
+import com.project.shopapp.response.UpdateCategoryResponse;
 import com.project.shopapp.service.impl.CategoryService;
+import com.project.shopapp.util.MessageKeys;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,12 +30,11 @@ public class CategoryController {
 
     @PostMapping("")
     // Nếu tham số truyền vào là 1 object thì sao ? => Data Transfer Object = Request Object
-    public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryDTO categoryDTO,
-                                                           BindingResult result) {
+    public ResponseEntity<CategoryResponse> createCategory(
+            @Valid @RequestBody CategoryDTO categoryDTO, BindingResult result) {
         CategoryResponse categoryResponse = new CategoryResponse();
-        if(result.hasErrors()) {
-            List<String> errorMessages = result.getFieldErrors()
-                    .stream()
+        if (result.hasErrors()) {
+            List<String> errorMessages = result.getFieldErrors().stream()
                     .map(FieldError::getDefaultMessage)
                     .toList();
             categoryResponse.setMessage(localizationUtils.getLocalizedMessage(MessageKeys.INSERT_CATEGORY_FAILED));
@@ -56,11 +55,12 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UpdateCategoryResponse> updateCategory(@PathVariable Long id,
-                                                                 @Valid @RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<UpdateCategoryResponse> updateCategory(
+            @PathVariable Long id, @Valid @RequestBody CategoryDTO categoryDTO) {
         UpdateCategoryResponse updateCategoryResponse = new UpdateCategoryResponse();
         categoryService.updateCategory(id, categoryDTO);
-        updateCategoryResponse.setMessage(localizationUtils.getLocalizedMessage(MessageKeys.UPDATE_CATEGORY_SUCCESSFULLY));
+        updateCategoryResponse.setMessage(
+                localizationUtils.getLocalizedMessage(MessageKeys.UPDATE_CATEGORY_SUCCESSFULLY));
         return ResponseEntity.ok(updateCategoryResponse);
     }
 
