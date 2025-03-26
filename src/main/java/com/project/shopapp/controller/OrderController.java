@@ -2,6 +2,8 @@ package com.project.shopapp.controller;
 
 import java.util.List;
 
+import com.project.shopapp.component.LocalizationUtils;
+import com.project.shopapp.util.MessageKeys;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderController {
     private final IOrderService orderService;
+    private final LocalizationUtils localizationUtils;
 
     @PostMapping("")
     public ResponseEntity<?> createOrder(@Valid @RequestBody OrderDTO orderDTO, BindingResult result) {
@@ -72,6 +75,6 @@ public class OrderController {
     public ResponseEntity<String> deleteOrder(@Valid @PathVariable Long id) {
         // xóa mềm => cập nhật trường active = false
         orderService.deleteOrder(id);
-        return ResponseEntity.ok("Order deleted successfully.");
+        return ResponseEntity.ok(localizationUtils.getLocalizedMessage(MessageKeys.DELETE_ORDER_SUCCESSFULLY));
     }
 }

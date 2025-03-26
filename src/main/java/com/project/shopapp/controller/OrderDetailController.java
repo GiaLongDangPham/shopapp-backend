@@ -2,6 +2,8 @@ package com.project.shopapp.controller;
 
 import java.util.List;
 
+import com.project.shopapp.component.LocalizationUtils;
+import com.project.shopapp.util.MessageKeys;
 import jakarta.validation.Valid;
 
 import org.modelmapper.ModelMapper;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderDetailController {
     private final IOrderDetailService orderDetailService;
     private final ModelMapper modelMapper;
+    private final LocalizationUtils localizationUtils;
 
     // Thêm mới 1 order detail
     @PostMapping("")
@@ -69,7 +72,7 @@ public class OrderDetailController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrderDetail(@Valid @PathVariable("id") Long id) {
         orderDetailService.deleteById(id);
-        return ResponseEntity.ok().body("Delete Order detail with id : " + id + " successfully");
+        return ResponseEntity.ok().body(localizationUtils.getLocalizedMessage(MessageKeys.DELETE_ORDER_DETAIL_SUCCESSFULLY));
         // return ResponseEntity.noContent().build();
     }
 }

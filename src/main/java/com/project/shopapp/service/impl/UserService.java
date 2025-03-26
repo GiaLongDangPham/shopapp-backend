@@ -2,7 +2,9 @@ package com.project.shopapp.service.impl;
 
 import java.util.Optional;
 
+import com.project.shopapp.component.LocalizationUtils;
 import com.project.shopapp.exception.PermissionDenyException;
+import com.project.shopapp.util.MessageKeys;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,7 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.project.shopapp.component.JwtTokenUtil;
+import com.project.shopapp.component.JwtTokenUtils;
 import com.project.shopapp.dto.UserDTO;
 import com.project.shopapp.exception.DataNotFoundException;
 import com.project.shopapp.model.Role;
@@ -27,8 +29,9 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
+    private final LocalizationUtils localizationUtils;
 
     // Register
     @Override
@@ -37,9 +40,9 @@ public class UserService implements IUserService {
         if (userRepository.existsByPhoneNumber(phoneNumber)) {
             throw new DataIntegrityViolationException("Phone number already exists");
         }
-        Role role = roleRepository
-                .findById(userDTO.getRoleId())
-                .orElseThrow(() -> new DataNotFoundException("Role not found"));
+        Role role = roleRepository.findById(userDTO.getRoleId())
+                .orElseThrow(() -> new DataNotFoundException(
+                        localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS)));
         if(role.getName().toUpperCase().equals(Role.ADMIN)){
             throw new PermissionDenyException("You do not have permission to register admin account");
         }
@@ -67,22 +70,32 @@ public class UserService implements IUserService {
     @Override
     public String login(String phoneNumber, String password) throws Exception {
         Optional<User> optionalUser = userRepository.findByPhoneNumber(phoneNumber);
-        if (optionalUser.isEmpty()) {
-            throw new DataNotFoundException("Invalid phone number / password");
+        if(optionalUser.isEmpty()) {
+            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
         }
-        // return optionalUser.get();//muốn trả JWT token ?
+        //return optionalUser.get();//muốn trả JWT token ?
         User existingUser = optionalUser.get();
-        // check password
-        if (existingUser.getFacebookAccountId() == 0 && existingUser.getGoogleAccountId() == 0) {
-            if (!passwordEncoder.matches(password, existingUser.getPassword())) {
-                throw new BadCredentialsException("Wrong phone number or password");
+        //check password
+        if (existingUser.getFacebookAccountId() == 0
+                && existingUser.getGoogleAccountId() == 0) {
+            if(!passwordEncoder.matches(password, existingUser.getPassword())) {
+                throw new BadCredentialsException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
             }
         }
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(phoneNumber, password, existingUser.getAuthorities());
+//        Optional<Role> optionalRole = roleRepository.findById(roleId);
+//        if(optionalRole.isEmpty() || !roleId.equals(existingUser.getRole().getId())) {
+//            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS));
+//        }
+        if(!optionalUser.get().isActive()) {
+            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.USER_IS_LOCKED));
+        }
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                phoneNumber, password,
+                existingUser.getAuthorities()
+        );
 
-        // authenticate with Java Spring security
+        //authenticate with Java Spring security
         authenticationManager.authenticate(authenticationToken);
-        return jwtTokenUtil.generateToken(existingUser);
+        return jwtTokenUtils.generateToken(existingUser);
     }
 }
