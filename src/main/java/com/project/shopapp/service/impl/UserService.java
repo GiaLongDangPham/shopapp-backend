@@ -22,6 +22,7 @@ import com.project.shopapp.service.IUserService;
 import com.project.shopapp.util.MessageKeys;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -35,6 +36,7 @@ public class UserService implements IUserService {
 
     // Register
     @Override
+    @Transactional
     public User createUser(UserDTO userDTO) throws Exception {
         String phoneNumber = userDTO.getPhoneNumber();
         if (userRepository.existsByPhoneNumber(phoneNumber)) {
