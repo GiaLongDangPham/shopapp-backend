@@ -59,22 +59,24 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
+    public ResponseEntity<LoginResponse> login(
+            @Valid @RequestBody UserLoginDTO userLoginDTO
+    ) {
         // Kiểm tra thông tin đăng nhập và sinh token
         try {
-            String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
-
+            String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword(),
+                    userLoginDTO.getRoleId());
+            // Trả về token trong response
             return ResponseEntity.ok(LoginResponse.builder()
-                    .token(token)
                     .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGIN_SUCCESSFULLY))
+                    .token(token)
                     .build());
         } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                    .body(LoginResponse.builder()
+            return ResponseEntity.badRequest().body(
+                    LoginResponse.builder()
                             .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGIN_FAILED, e.getMessage()))
-                            .build());
+                            .build()
+            );
         }
-        // Trả về token trong response
-
     }
 }

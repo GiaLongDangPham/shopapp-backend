@@ -2,6 +2,7 @@ package com.project.shopapp.controller;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 import jakarta.validation.*;
 
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -97,6 +99,24 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/images/{imageName}")
+    public ResponseEntity<?> viewImage(@PathVariable String imageName) {
+        try {
+            Path imagePath = Paths.get("uploads/"+imageName);
+            UrlResource resource = new UrlResource(imagePath.toUri());
+
+            if (resource.exists()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     private String storeFile(MultipartFile file) throws IOException {
         if (!isImageFile(file) || file.getOriginalFilename() == null) {
             throw new IOException("Invalid image format");
@@ -105,13 +125,13 @@ public class ProductController {
         // Thêm UUID vào trước tên file để đảm bảo tên file là duy nhất
         String uniqueFilename = UUID.randomUUID().toString() + "_" + filename;
         // Đường dẫn đến thư mục mà bạn muốn lưu file
-        java.nio.file.Path uploadDir = Paths.get("uploads");
+        Path uploadDir = Paths.get("uploads");
         // Kiểm tra và tạo thư mục nếu nó không tồn tại
         if (!Files.exists(uploadDir)) {
             Files.createDirectories(uploadDir);
         }
         // Đường dẫn đầy đủ đến file
-        java.nio.file.Path destination = Paths.get(uploadDir.toString(), uniqueFilename);
+        Path destination = Paths.get(uploadDir.toString(), uniqueFilename);
         // Sao chép file vào thư mục đích
         Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
         return uniqueFilename;

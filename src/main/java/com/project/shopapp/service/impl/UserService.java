@@ -69,7 +69,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public String login(String phoneNumber, String password) throws Exception {
+    public String login(String phoneNumber, String password, Long roleId) throws Exception {
         Optional<User> optionalUser = userRepository.findByPhoneNumber(phoneNumber);
         if (optionalUser.isEmpty()) {
             throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
@@ -83,11 +83,10 @@ public class UserService implements IUserService {
                         localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
             }
         }
-        //        Optional<Role> optionalRole = roleRepository.findById(roleId);
-        //        if(optionalRole.isEmpty() || !roleId.equals(existingUser.getRole().getId())) {
-        //            throw new
-        // DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS));
-        //        }
+        Optional<Role> optionalRole = roleRepository.findById(roleId);
+        if(optionalRole.isEmpty() || !roleId.equals(existingUser.getRole().getId())) {
+            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS));
+        }
 //        if (!optionalUser.get().isActive()) {
 //            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.USER_IS_LOCKED));
 //        }
