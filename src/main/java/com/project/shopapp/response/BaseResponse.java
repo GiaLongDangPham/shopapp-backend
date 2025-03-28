@@ -9,7 +9,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseReponse {
+public class BaseResponse {
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
 

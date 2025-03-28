@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDetailResponse extends BaseReponse {
+public class OrderDetailResponse extends BaseResponse {
     private Long id;
 
     @JsonProperty("order_id")

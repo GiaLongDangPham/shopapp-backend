@@ -110,7 +110,10 @@ public class ProductController {
                         .contentType(MediaType.IMAGE_JPEG)
                         .body(resource);
             } else {
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(new UrlResource(Paths.get("uploads/notfound.jpg").toUri()));
+//                return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
@@ -144,25 +147,34 @@ public class ProductController {
 
     @GetMapping("")
     public ResponseEntity<ProductListResponse> getProducts(
-            @RequestParam("page") int page, @RequestParam("limit") int limit) {
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "0", name = "category_id") Long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
         // Tạo Pageable từ thông tin trang và giới hạn
-        PageRequest pageRequest =
-                PageRequest.of(page, limit, Sort.by("id").ascending());
-        Page<ProductResponse> productPage = productService.getAllProducts(pageRequest);
+        PageRequest pageRequest = PageRequest.of(
+                page, limit,
+                //Sort.by("createdAt").descending()
+                Sort.by("id").ascending()
+        );
+        Page<ProductResponse> productPage = productService.getAllProducts(keyword, categoryId, pageRequest);
         // Lấy tổng số trang
         int totalPages = productPage.getTotalPages();
         List<ProductResponse> products = productPage.getContent();
-        return ResponseEntity.ok(ProductListResponse.builder()
+        return ResponseEntity.ok(ProductListResponse
+                .builder()
                 .products(products)
                 .totalPages(totalPages)
                 .build());
     }
-    // http://localhost:8088/api/v1/products/6
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable("id") Long productId) {
         try {
             Product existingProduct = productService.getProductById(productId);
-            return ResponseEntity.ok(ProductResponse.fromProduct(existingProduct));
+            ProductResponse productResponse = ProductResponse.fromProduct(existingProduct);
+            return ResponseEntity.ok(productResponse);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
